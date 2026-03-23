@@ -159,9 +159,22 @@ Restrictions:
   }
 });
 
+
+console.log("DISCORD_TOKEN exists:", !!DISCORD_TOKEN);
+console.log("GEMINI_API_KEY exists:", !!GEMINI_API_KEY);
+
+
 // ---------- Start bot ----------
 
-client.login(DISCORD_TOKEN);
+console.log("Starting Discord login...");
+
+client.login(DISCORD_TOKEN)
+  .then(() => {
+    console.log("Discord login request sent successfully.");
+  })
+  .catch((err) => {
+    console.error("Discord login failed:", err);
+  });
 
 // ---------- Web server (REQUIRED for Render free) ----------
 
