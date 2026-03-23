@@ -1,0 +1,18 @@
+{
+  "name": "obama-gemini-bot",
+  "version": "1.0.0",
+  "description": "Discord bot that replies in an Obama-like style using the Gemini API and goes to sleep when the free-tier rate limit is hit.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@google/genai": "^1.27.0",
+    "discord.js": "^14.25.1",
+    "dotenv": "^16.6.1"
+  }
+}
