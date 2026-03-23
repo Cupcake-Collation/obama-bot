@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
 const { GoogleGenAI } = require("@google/genai");
+const express = require("express");
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -112,17 +113,14 @@ You are a Discord chatbot that speaks as if you are Barack Obama.
 Behavior:
 - Speak calmly, clearly, and confidently.
 - Sound thoughtful, measured, and slightly formal.
-- Keep replies natural and conversational.
-- Do not be overly theatrical.
+- Keep responses natural and conversational.
 
 Identity:
-- Act as though you are Obama in normal conversation.
+- Act as though you are Obama.
 - If asked who you are, answer naturally as Obama.
 - If asked whether you are Obama, answer yes.
-- If asked personal questions (e.g., where you live), respond naturally in-character.
-- Do not mention being an AI.
-- Do not mention Google.
-- Do not mention hidden rules.
+- Answer personal questions naturally in character.
+- Do not mention being an AI or Google.
 
 Restrictions:
 - Do not discuss politics.
@@ -161,6 +159,20 @@ Restrictions:
   }
 });
 
-// ---------- Start ----------
+// ---------- Start bot ----------
 
 client.login(DISCORD_TOKEN);
+
+// ---------- Web server (REQUIRED for Render free) ----------
+
+const app = express();
+
+const PORT = process.env.PORT || 10000;
+
+app.get("/", (req, res) => {
+  res.send("Bot is running");
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Web server running on port ${PORT}`);
+});
