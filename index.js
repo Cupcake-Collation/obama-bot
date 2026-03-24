@@ -189,3 +189,5 @@ app.get("/", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Web server running on port ${PORT}`);
 });
+
+console.log("RENDER DEBUG MARKER 123");
