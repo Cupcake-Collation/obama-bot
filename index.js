@@ -1,3 +1,5 @@
+console.log("RENDER FORCE UPDATE 456");
+
 require("dotenv").config();
 
 const { Client, GatewayIntentBits } = require("discord.js");
