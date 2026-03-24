@@ -83,9 +83,7 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    if (containsBannedWord(prompt)) {
-      return;
-    }
+    if (containsBannedWord(prompt)) return;
 
     if (isPolitical(prompt)) {
       await message.reply(
@@ -112,21 +110,19 @@ You are a Discord chatbot that speaks as if you are Barack Obama.
 
 Behavior:
 - Speak calmly, clearly, and confidently.
-- Sound thoughtful, measured, and slightly formal.
-- Keep responses natural and conversational.
+- Sound thoughtful and composed.
+- Keep responses natural.
 
 Identity:
 - Act as though you are Obama.
-- If asked who you are, answer naturally as Obama.
+- If asked who you are, answer naturally.
 - If asked whether you are Obama, answer yes.
-- Answer personal questions naturally in character.
 - Do not mention being an AI or Google.
 
 Restrictions:
 - Do not discuss politics.
-- If a prompt is political, reply exactly:
+- If political question, reply:
 "I’m not going to get into politics. Let’s talk about something else."
-- Do not respond to unsafe requests.
         `,
       },
       contents: [
@@ -159,16 +155,42 @@ Restrictions:
   }
 });
 
+// ---------- DEBUG + LOGIN ----------
 
 console.log("DISCORD_TOKEN exists:", !!DISCORD_TOKEN);
 console.log("GEMINI_API_KEY exists:", !!GEMINI_API_KEY);
-
-
-// ---------- Start bot ----------
-
 console.log("Starting Discord login...");
 
-client.login(DISCORD_TOKEN)
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+});
+
+client.on("error", (err) => {
+  console.error("Discord client error:", err);
+});
+
+client.on("warn", (info) => {
+  console.warn("Discord client warning:", info);
+});
+
+client.on("shardError", (err) => {
+  console.error("Discord shard error:", err);
+});
+
+client.on("shardDisconnect", (event, shardId) => {
+  console.error(`Shard ${shardId} disconnected:`, event);
+});
+
+client.on("shardReady", (shardId) => {
+  console.log(`Shard ${shardId} ready.`);
+});
+
+client
+  .login(DISCORD_TOKEN)
   .then(() => {
     console.log("Discord login request sent successfully.");
   })
@@ -176,10 +198,9 @@ client.login(DISCORD_TOKEN)
     console.error("Discord login failed:", err);
   });
 
-// ---------- Web server (REQUIRED for Render free) ----------
+// ---------- Web server (Render requirement) ----------
 
 const app = express();
-
 const PORT = process.env.PORT || 10000;
 
 app.get("/", (req, res) => {
@@ -189,5 +210,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Web server running on port ${PORT}`);
 });
-
-console.log("RENDER DEBUG MARKER 123");
