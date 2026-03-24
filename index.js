@@ -189,14 +189,50 @@ client.on("shardReady", (shardId) => {
   console.log(`Shard ${shardId} ready.`);
 });
 
-client
-  .login(DISCORD_TOKEN)
-  .then(() => {
+client.on("debug", (info) => {
+  console.log("DISCORD DEBUG:", info);
+});
+
+async function testDiscordToken() {
+  try {
+    console.log("Testing Discord token with REST call...");
+
+    const res = await fetch("https://discord.com/api/v10/users/@me", {
+      headers: {
+        Authorization: `Bot ${DISCORD_TOKEN}`,
+      },
+    });
+
+    console.log("Discord REST status:", res.status);
+
+    const text = await res.text();
+    console.log("Discord REST body:", text);
+  } catch (err) {
+    console.error("Discord REST test failed:", err);
+  }
+}
+
+async function startDiscord() {
+  await testDiscordToken();
+
+  console.log("Calling client.login()...");
+
+  try {
+    const loginPromise = client.login(DISCORD_TOKEN);
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Discord login timed out after 30 seconds")), 30000)
+    );
+
+    await Promise.race([loginPromise, timeoutPromise]);
+
     console.log("Discord login request sent successfully.");
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error("Discord login failed:", err);
-  });
+  }
+}
+
+startDiscord();
 
 // ---------- Web server (Render requirement) ----------
 
